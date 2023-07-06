@@ -1,8 +1,9 @@
-//I want to do two things, I want to redirect the user back to slash nothing,so not leave him on /message and I want to create a new file and store the message the user entered in it.
+//parsing request bodies
 
+//So time to parse the incoming requests and get the data that is part of the request because that data should be whatever we entered in input.
 
 const http = require("http");
-const fs = require('fs');
+const fs = require("fs");
 const server = http.createServer((req, res) => {
   const url = req.url;
   const method = req.method;
@@ -10,15 +11,29 @@ const server = http.createServer((req, res) => {
     res.write("<html>");
     res.write("<head><title>Enter Message</title></head>");
     res.write(
-      '<body><form action="/message" method="POST"><input type="text"><button type="submit">SEND</button></input></form></body>'
+      '<body><form action="/message" method="POST"><input type="text" name="message"><button type="submit">SEND</button></input></form></body>'
     );
     res.write("</html>");
     return res.end();
   }
 
-  if(url === '/message' && method === 'POST'){
-    fs.writeFileSync('message.txt','DUMMY');
-    res.writeHead(302, { 'Location': '/' });
+  if (url === "/message" && method === "POST") {
+    const body = [];
+    //on allows us to listen to certain events and the event I want to listen to here is the data event
+    req.on("data", (chunk) => {
+      console.log(chunk);
+      body.push(chunk);
+    });
+    //this is a utility method offered by nodejs where we do something to our buffered chunks
+    req.on("end", () => {
+      const parseBody = Buffer.concat(body).toString();
+      console.log(parseBody);
+      const message = parseBody.split("=")[1];
+      fs.writeFileSync("message.txt", message);
+    });
+    
+
+    res.writeHead(302, { Location: "/" });
     //res.statusCode = 302;
     //res.setHeader('Location','/');
     return res.end();
@@ -33,5 +48,3 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(3000);
-
-
