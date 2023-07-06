@@ -1,14 +1,26 @@
-const http = require("http");
+//I want to do two things, I want to redirect the user back to slash nothing,so not leave him on /message and I want to create a new file and store the message the user entered in it.
 
+
+const http = require("http");
+const fs = require('fs');
 const server = http.createServer((req, res) => {
   const url = req.url;
-
+  const method = req.method;
   if (url === "/") {
-    
     res.write("<html>");
     res.write("<head><title>Enter Message</title></head>");
-    res.write('<body><form action="/message" method="POST"><input type="text"><button type="submit">SEND</button></input></form></body>');
+    res.write(
+      '<body><form action="/message" method="POST"><input type="text"><button type="submit">SEND</button></input></form></body>'
+    );
     res.write("</html>");
+    return res.end();
+  }
+
+  if(url === '/message' && method === 'POST'){
+    fs.writeFileSync('message.txt','DUMMY');
+    res.writeHead(302, { 'Location': '/' });
+    //res.statusCode = 302;
+    //res.setHeader('Location','/');
     return res.end();
   }
 
@@ -22,8 +34,4 @@ const server = http.createServer((req, res) => {
 
 server.listen(3000);
 
-//if (url === "/") { ... }: This condition checks if the requested URL is the root ("/") of the server.
 
-//Inside the if block, the server sends an HTML response back to the client. It writes the HTML content using the res.write() method and ends the response with res.end(). In this case, the HTML form is displayed, allowing the user to enter a message and submit it.
-
-//If the requested URL is not the root ("/"), the server sends a default HTML response. It writes a basic HTML page with a heading saying "Hello from my Node.js server".
