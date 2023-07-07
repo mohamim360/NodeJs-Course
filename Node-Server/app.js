@@ -1,5 +1,3 @@
-
-
 const http = require("http");
 const fs = require("fs");
 const server = http.createServer((req, res) => {
@@ -17,29 +15,29 @@ const server = http.createServer((req, res) => {
 
   if (url === "/message" && method === "POST") {
     const body = [];
-    
+
     req.on("data", (chunk) => {
       console.log(chunk);
       body.push(chunk);
     });
-  
-  return req.on("end", () => {
+
+    return req.on("end", () => {
       const parseBody = Buffer.concat(body).toString();
       console.log(parseBody);
       const message = parseBody.split("=")[1];
-      fs.writeFileSync("message.txt", message);
-      res.writeHead(302, { Location: "/" });
-    //res.statusCode = 302;
-    //res.setHeader('Location','/');
-      return res.end();
+      //write file sync, the sync here stands for synchronous and this is a special method which will actually block code execution until this file is created.
+      //fs.writeFileSync("message.txt", message);
+      fs.writeFile("message.txt", message, (err) => {
+        res.writeHead(302, { Location: "/" });
+        //res.statusCode = 302;
+        //res.setHeader('Location','/');
+        return res.end();
+      });
     });
-    
-
-    
   }
-//The implication for this line is that we reach it too early.
+  //The implication for this line is that we reach it too early.
 
-//So to avoid this, we should actually return "end"
+  //So to avoid this, we should actually return "end"
   res.setHeader("Content-Type", "text/html");
   res.write("<html>");
   res.write("<head><title>My First Page</title></head>");
@@ -50,19 +48,15 @@ const server = http.createServer((req, res) => {
 
 server.listen(3000);
 
-/* 
-Event-driven code execution
- is a programming paradigm where the flow of the program is determined by events that occur asynchronously. Instead of executing code in a linear manner, the program responds to events triggered by user actions, system events, or other sources.
 
-In the given code snippet, an HTTP server is created using the Node.js `http` module. The server listens for incoming requests and responds accordingly. The event-driven nature is evident in how the server handles different events.
+/*
+Blocking and non-blocking code refer to different ways of handling I/O operations in Node.js.
 
-When a request is made to the server, the `createServer` function sets up a callback function that is executed whenever a request event occurs. Inside this callback function, the code examines the URL and HTTP method of the request to determine the appropriate response.
+Blocking Code:
+In the provided code snippet, fs.writeFileSync is used to write the message to the file "message.txt". This is an example of blocking code. When executing this code, the program halts and waits until the file write operation is completed before proceeding to the next line. During this time, the program is unable to perform any other tasks, such as handling other requests or processing other code. Blocking operations can potentially slow down the entire program if they take a long time to complete.
 
-If the URL is "/", the server sends an HTML form to the client. This is done by writing HTML content to the response object (`res.write`) and then ending the response (`res.end`). The server handles this request synchronously, meaning it waits for the response to be sent before moving on to the next event.
+Non-blocking Code:
+On the other hand, the alternative approach fs.writeFile is an example of non-blocking code. In this case, the file write operation is initiated, but the program does not wait for it to finish. Instead, it continues executing the subsequent lines of code. When the write operation is completed, a callback function is invoked to handle any errors and perform further actions. Non-blocking operations allow the program to continue processing other tasks while waiting for the I/O operation to complete, which helps in improving the overall responsiveness and scalability of the application.
 
-If the URL is "/message" and the method is "POST", the server processes the data sent by the client. The server listens for the "data" event, which occurs when data is being transmitted in chunks. It collects the chunks of data and stores them in the `body` array. When the "end" event occurs, indicating that all data has been received, the collected chunks are concatenated and converted to a string (`Buffer.concat(body).toString()`). The server then extracts the message from the parsed body and writes it to a file using the `fs` module. Finally, a response with a status code of 302 (redirect) is sent back to the client to redirect them to the home page ("/").
-
-If the URL is neither "/" nor "/message", the server sends a basic HTML response with a greeting message.
-
-In summary, event-driven code execution allows the server to handle multiple events concurrently and respond accordingly based on the nature of each event. It enables non-blocking I/O and asynchronous behavior, making it well-suited for handling multiple simultaneous requests in a single-threaded environment like Node.js.
+In the provided code, replacing fs.writeFileSync with fs.writeFile would make the file write operation non-blocking. Once the operation is finished, the provided callback function is called, which writes the response headers and ends the response. This allows the server to handle other requests or tasks while the file is being written asynchronously.
 */
