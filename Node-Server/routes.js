@@ -3,7 +3,7 @@ const fs = require("fs");
 const requestHandler = (req, res) => {
   const url = req.url;
   const method = req.method;
-  e;
+  
   if (url === "/") {
     res.write("<html>");
     res.write("<head><title>Enter Message</title></head>");
@@ -22,7 +22,7 @@ const requestHandler = (req, res) => {
       body.push(chunk);
     });
 
-    return req.on("end", () => {
+     req.on("end", () => {
       const parseBody = Buffer.concat(body).toString();
       console.log(parseBody);
       const message = parseBody.split("=")[1];
@@ -51,15 +51,3 @@ module.exports = {
 //exports.handler =  requestHandler;
 //module.exports = requestHandler;
 
-/*
-
-and we can now import from that routes.js file by requiring it and node will look for module exports
-
-and see if something was registered for this file here
-
-and we do register something in module exports, the request handler and you can register anything here.
-
-You can add a new javascript object with multiple key value pairs, whatever you need, here
-
-I'll just register my function.
-*/
