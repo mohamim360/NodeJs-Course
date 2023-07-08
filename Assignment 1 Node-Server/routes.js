@@ -2,6 +2,7 @@ const requestHandler = (req, res) => {
   const url = req.url;
   const method = req.method;
   if (url === "/") {
+    res.setHeader("Content-Type", "text/html");
     res.write("<html>");
     res.write("<head><title>Assignment 1</title></head>");
     res.write("<body>");
@@ -32,6 +33,7 @@ const requestHandler = (req, res) => {
     });
   }
   if (url === "/users") {
+    res.setHeader("Content-Type", "text/html");
     res.write("<html>");
     res.write("<head><title>Users</title></head>");
     res.write(
