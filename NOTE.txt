@@ -1,0 +1,16 @@
+
+1
+-----------
+"start":"node app.js"
+//npm start
+"start-server":"node app.js"
+//npm run start-server
+
+2
+--------
+npm install
+---------
+* if you rerun just npm install, without defining an extra package name because this command standalone
+will simply go through all your packages mentioned in package.json and install them and it would automatically pick a later version if available
+* you can always delete that node
+modules folder if you need to free up space.Now you can't use that package but you can then rerun npm install if you start working on that project again and it will re-install this package and all its pure dependencies and therefore recreate the node modules folder.
