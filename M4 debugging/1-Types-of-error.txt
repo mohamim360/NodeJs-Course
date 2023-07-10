@@ -1,0 +1,7 @@
+different types of errors
+
+1.Syntax errors
+
+2.Runtime errors
+
+3.Logical errors

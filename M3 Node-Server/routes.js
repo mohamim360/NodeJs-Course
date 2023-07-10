@@ -22,7 +22,7 @@ const requestHandler = (req, res) => {
       body.push(chunk);
     });
 
-     req.on("end", () => {
+    return req.on("end", () => {
       const parseBody = Buffer.concat(body).toString();
       console.log(parseBody);
       const message = parseBody.split("=")[1];
