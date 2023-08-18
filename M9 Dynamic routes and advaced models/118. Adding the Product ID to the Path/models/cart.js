@@ -16,7 +16,7 @@ module.exports = class Cart {
 
       const existingProductIndex = cart.products.findIndex(
         (prod) => prod.id === id
-      ); //findIndex --- returns the index (position) of the first element that passes a test
+      ); 
 
       const existingProduct = cart.products[existingProductIndex];
       //add new product/ increase quantity
