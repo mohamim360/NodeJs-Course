@@ -61,6 +61,17 @@ exports.postCart = (req, res, next) => {
   res.redirect("/cart");
 };
 
+exports.postCartDeleteProduct = (req, res, next) => {
+  const prodId = req.body.productId;
+  Product.findById(prodId, (product) => {
+    Cart.deleteProduct(prodId, product.price);
+    res.redirect("/cart");
+  });
+ 
+};
+/* there is a potential race condition. If the Cart.deleteProduct or Product.findById functions are asynchronous (which is likely, considering they involve database operations), the redirect might occur before those operations have finished, leading to incorrect behavior.
+
+To avoid this potential issue and ensure proper execution, it's generally safer to place the redirect inside the callback function, as shown in the first snippet. This way, you ensure that the redirect only happens once the necessary operations are completed.*/ 
 exports.getOrders = (req, res, next) => {
   res.render("shop/orders", {
     pageTitle: "Your Orders",
