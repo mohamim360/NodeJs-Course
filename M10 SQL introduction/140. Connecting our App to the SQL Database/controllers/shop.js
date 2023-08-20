@@ -3,39 +3,43 @@ const Cart = require("../models/cart");
 
 exports.addProducts = (req, res, next) => {
   Product.fetchAll()
-  .then(([rows, fieldData]) => {
-    res.render("shop/product-list", {
-      prods: rows,
-      pageTitle: "shop",
-      path: "/products",
-    });
-   
-  })
-  .catch(err => console.log(err))
-  
- 
+    .then(([rows, fieldData]) => {
+      res.render("shop/product-list", {
+        prods: rows,
+        pageTitle: "shop",
+        path: "/products",
+      });
+    })
+    .catch((err) => console.log(err));
 };
 
 exports.getProduct = (req, res, next) => {
   const prodID = req.params.productId;
-  Product.findById(prodID, (product) => {
-    res.render("shop/product-detail", {
-      product: product,
-      pageTitle: product.title,
-      path: "/products",
-    });
-  });
+  Product.findById(prodID)
+    .then(([product]) =>  {
+      res.render("shop/product-detail", {
+        product: product[0],
+        pageTitle: product.title,
+        path: "/products",
+      });
+    })
+    .catch((err) => console.log(err));
+
+    /*promises are used to manage the asynchronous flow of the database query and rendering process. The findById method returns a promise that resolves with the query result, and the .then() method is used to handle that result. If there's an error at any step, it's caught using the .catch() method and logged to the console. This approach makes the code more readable and maintainable compared to deeply nested callbacks.
+
+*/
 };
 
 exports.getIndex = (req, res, next) => {
-  Product.fetchAll().then(([rows, fieldData]) => {
-    res.render("shop/product-list", {
-      prods: rows,
-      pageTitle: "shop",
-      path: "/",
-    });
-  })
-  .catch(err => console.log(err))
+  Product.fetchAll()
+    .then(([rows, fieldData]) => {
+      res.render("shop/product-list", {
+        prods: rows,
+        pageTitle: "shop",
+        path: "/",
+      });
+    })
+    .catch((err) => console.log(err));
 };
 
 exports.getCart = (req, res, next) => {
