@@ -14,8 +14,13 @@ exports.postAddProducts = (req, res) => {
   const price = req.body.price;
   const description = req.body.description;
   const product = new Product(null, title, imageUrl, description, price);
-  product.save();
-  res.redirect("/");
+  product
+    .save()
+    .then(() =>{
+      res.redirect("/");//redirect once the insert completed.
+    })
+    .catch((err) => console.log(err));
+  
 };
 
 exports.getEditProducts = (req, res, next) => {
@@ -43,7 +48,7 @@ exports.postEditProducts = (req, res, next) => {
   const updatedImageUrl = req.body.imageUrl;
   const updatedDescription = req.body.description;
   const updatedPrice = req.body.price;
-  
+
   const updatedProduct = new Product(
     prodId,
     updatedTitle,
@@ -52,7 +57,7 @@ exports.postEditProducts = (req, res, next) => {
     updatedPrice
   );
   updatedProduct.save();
-  res.redirect('/admin/products')
+  res.redirect("/admin/products");
 };
 
 exports.AddProducts = (req, res) => {
@@ -68,8 +73,7 @@ exports.AddProducts = (req, res) => {
 //delete
 
 exports.postDeleteProduct = (req, res) => {
-   const prodId = req.body.productId;
-   Product.deleteById(prodId);
-   res.redirect('/admin/products')
-
-}
+  const prodId = req.body.productId;
+  Product.deleteById(prodId);
+  res.redirect("/admin/products");
+};
