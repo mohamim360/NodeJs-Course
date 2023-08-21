@@ -2,21 +2,22 @@ const Product = require("../models/product");
 const Cart = require("../models/cart");
 
 exports.addProducts = (req, res, next) => {
-  Product.fetchAll()
-    .then(([rows, fieldData]) => {
+  Product.findAll()
+    .then((products) => {
       res.render("shop/product-list", {
-        prods: rows,
+        prods: products,
         pageTitle: "shop",
         path: "/products",
       });
     })
     .catch((err) => console.log(err));
+ 
 };
 
 exports.getProduct = (req, res, next) => {
   const prodID = req.params.productId;
-  Product.findById(prodID)
-    .then(([product]) =>  {
+  Product.findByPk(prodID)
+    .then(([product]) => {
       res.render("shop/product-detail", {
         product: product[0],
         pageTitle: product.title,
@@ -24,17 +25,13 @@ exports.getProduct = (req, res, next) => {
       });
     })
     .catch((err) => console.log(err));
-
-    /*promises are used to manage the asynchronous flow of the database query and rendering process. The findById method returns a promise that resolves with the query result, and the .then() method is used to handle that result. If there's an error at any step, it's caught using the .catch() method and logged to the console. This approach makes the code more readable and maintainable compared to deeply nested callbacks.
-
-*/
 };
 
 exports.getIndex = (req, res, next) => {
-  Product.fetchAll()
-    .then(([rows, fieldData]) => {
+  Product.findAll()
+    .then((products) => {
       res.render("shop/product-list", {
-        prods: rows,
+        prods: products,
         pageTitle: "shop",
         path: "/",
       });
@@ -65,7 +62,7 @@ exports.getCart = (req, res, next) => {
 
 exports.postCart = (req, res, next) => {
   const prodId = req.body.productId;
-  Product.findById(prodId, (product) => {
+  Product.findByPk(prodId, (product) => {
     Cart.addProduct(prodId, product.price);
   });
   res.redirect("/cart");
@@ -73,12 +70,12 @@ exports.postCart = (req, res, next) => {
 
 exports.postCartDeleteProduct = (req, res, next) => {
   const prodId = req.body.productId;
-  Product.findById(prodId, (product) => {
+  Product.findByPk(prodId, (product) => {
     Cart.deleteProduct(prodId, product.price);
     res.redirect("/cart");
   });
 };
-/* there is a potential race condition. If the Cart.deleteProduct or Product.findById functions are asynchronous (which is likely, considering they involve database operations), the redirect might occur before those operations have finished, leading to incorrect behavior.
+/* there is a potential race condition. If the Cart.deleteProduct or Product.findByPk functions are asynchronous (which is likely, considering they involve database operations), the redirect might occur before those operations have finished, leading to incorrect behavior.
 
 To avoid this potential issue and ensure proper execution, it's generally safer to place the redirect inside the callback function, as shown in the first snippet. This way, you ensure that the redirect only happens once the necessary operations are completed.*/
 exports.getOrders = (req, res, next) => {
