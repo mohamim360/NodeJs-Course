@@ -16,10 +16,21 @@ exports.addProducts = (req, res, next) => {
 
 exports.getProduct = (req, res, next) => {
   const prodID = req.params.productId;
+
+  // Product.findAll({where : {id : prodID}})
+  // .then(products => {
+  //   res.render("shop/product-detail", {
+  //     product: products[0],
+  //     pageTitle: products[0].title,
+  //     path: "/products",
+  //   });
+  // })
+  // .catch((err) => console.log(err));
+
   Product.findByPk(prodID)
-    .then(([product]) => {
+    .then(product => {
       res.render("shop/product-detail", {
-        product: product[0],
+        product: product,
         pageTitle: product.title,
         path: "/products",
       });
