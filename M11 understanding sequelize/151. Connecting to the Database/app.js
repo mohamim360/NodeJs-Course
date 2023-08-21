@@ -12,6 +12,8 @@ const errorController = require("./controllers/error");
 const sequelize = require("./utilities/database");
 const Product = require("./models/product");
 const User = require("./models/user");
+const Cart = require("./models/cart");
+const CartItem = require("./models/cart-item");
 
 const app = express();
 
@@ -37,10 +39,15 @@ app.use(errorController.get404);
 
 Product.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
 User.hasMany(Product);
+User.hasOne(Cart)
+Cart.belongsTo(User)
+Cart.belongsToMany(Product, { through : CartItem})
+Product.belongsToMany(Cart, { through : CartItem})//{ through: CartItem }: The through option specifies the intermediary model that connects the two models in the many-to-many relationship. The CartItem model is used as a junction table to keep track of which products are associated with which carts.
+
 
 sequelize
-  //.sync({ force: true })
-  .sync()
+  .sync({ force: true })
+  //.sync()
   .then((result) => {
     //console.log(result);
     return User.findByPk(1);
