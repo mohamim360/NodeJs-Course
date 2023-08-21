@@ -23,6 +23,7 @@ exports.postAddProducts = (req, res) => {
     .then((result) => {
       // console.log(result);
       console.log("data");
+      res.redirect("/admin/products");
     })
     .catch((err) => console.log(err));
 };
@@ -57,21 +58,18 @@ exports.postEditProducts = (req, res, next) => {
   const updatedDescription = req.body.description;
   const updatedPrice = req.body.price;
   Product.findByPk(prodId)
-  .then( product => {
-    product.title = 
-    updatedTitle;
-    product.price = updatedPrice;
-    product.description = updatedDescription;
-    product.imageUrl = updatedImageUrl;
-    return  product.save();
-  })
-  .then(result => {
-    console.log('UPDATE PRODUCT');
-    res.redirect("/admin/products");
-  })
-  .catch( err => console.log(err))
- 
-
+    .then((product) => {
+      product.title = updatedTitle;
+      product.price = updatedPrice;
+      product.description = updatedDescription;
+      product.imageUrl = updatedImageUrl;
+      return product.save();
+    })
+    .then((result) => {
+      console.log("UPDATE PRODUCT");
+      res.redirect("/admin/products");
+    })
+    .catch((err) => console.log(err));
 };
 
 exports.AddProducts = (req, res) => {
@@ -90,6 +88,13 @@ exports.AddProducts = (req, res) => {
 
 exports.postDeleteProduct = (req, res) => {
   const prodId = req.body.productId;
-  Product.deleteById(prodId);
-  res.redirect("/admin/products");
+  Product.findByPk(prodId)
+    .then((product) => {
+      return product.destroy();
+    })
+    .then((result) => {
+      console.log("DESTROYED PRODUCT");
+      res.redirect("/admin/products");
+    })
+    .catch((err) => console.log(err));
 };
