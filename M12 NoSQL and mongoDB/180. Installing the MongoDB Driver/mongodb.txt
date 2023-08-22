@@ -1,0 +1,4 @@
+# 180. Installing the MongoDB Driver
+
+MongoClient-- is a class provided by the MongoDB Node.js driver. It's used to create connections to a MongoDB database server and interact with the database. The MongoDB Node.js driver allows you to interact with a MongoDB database using JavaScript or TypeScript code.
+
