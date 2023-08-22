@@ -72,3 +72,4 @@ sequelize
   .catch((err) => {
     console.log(err);
   });
+/**the reason app.listen(3000); is placed where it is in the promise chain is to ensure that the server starts only after all the database synchronization, user creation/retrieval, and cart creation tasks have been successfully completed. This approach ensures that your server doesn't start prematurely and that the necessary database setup is in place before handling incoming requests. */
