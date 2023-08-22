@@ -1,7 +1,18 @@
-const Sequelize = require("sequelize");
+const mongoConnect = require("./utilities/database");
 
-const sequelize = require("../utilities/database");
+class Product {
+  constructor(title, price, description, imageUrl) {
 
+    this.title = title;
+    this.imageUrl = imageUrl;
+    this.description = description;
+    this.price = price;
+  }
+
+  save(){
+
+  }
+}
 const Product = sequelize.define("product", {
   id: {
     type: Sequelize.INTEGER,
@@ -23,5 +34,5 @@ const Product = sequelize.define("product", {
     allowNull: false,
   },
 });
- 
+
 module.exports = Product;
