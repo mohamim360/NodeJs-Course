@@ -24,55 +24,53 @@ exports.postAddProducts = (req, res) => {
     .catch((err) => console.log(err));
 };
 
-// exports.getEditProducts = (req, res, next) => {
-//   const editMode = req.query.edit;
-//   if (!editMode) {
-//     return res.redirect("/");
-//   }
-//   const prodId = req.params.productId;
-//   req.user
-//     .getProducts({ where: { id: prodId } })
-//     //Product.findByPk(prodId)
-//     .then((products) => {
-//       const product = products[0];
-//       if (!product) {
-//         return res.redirect("/");
-//       }
-//       res.render("admin/edit-product", {
-//         pageTitle: "Edit Product",
-//         path: "/admin/edit-product",
-//         editing: editMode,
-//         product: product,
-//       });
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//     });
-// };
+exports.getEditProducts = (req, res, next) => {
+  const editMode = req.query.edit;
+  if (!editMode) {
+    return res.redirect("/");
+  }
+  const prodId = req.params.productId;
+  Product.findById(prodId)
 
-// exports.postEditProducts = (req, res, next) => {
-//   const prodId = req.body.productId;
-//   const updatedTitle = req.body.title;
-//   const updatedImageUrl = req.body.imageUrl;
-//   const updatedDescription = req.body.description;
-//   const updatedPrice = req.body.price;
-//   Product.findByPk(prodId)
-//     .then((product) => {
-//       product.title = updatedTitle;
-//       product.price = updatedPrice;
-//       product.description = updatedDescription;
-//       product.imageUrl = updatedImageUrl;
-//       return product.save();
-//     })
-//     .then((result) => {
-//       console.log("UPDATE PRODUCT");
-//       res.redirect("/admin/products");
-//     })
-//     .catch((err) => console.log(err));
-// };
+    .then((product) => {
+      if (!product) {
+        return res.redirect("/");
+      }
+      res.render("admin/edit-product", {
+        pageTitle: "Edit Product",
+        path: "/admin/edit-product",
+        editing: editMode,
+        product: product,
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+exports.postEditProducts = (req, res, next) => {
+  const prodId = req.body.productId;
+  const updatedTitle = req.body.title;
+  const updatedImageUrl = req.body.imageUrl;
+  const updatedDescription = req.body.description;
+  const updatedPrice = req.body.price;
+  Product.findByPk(prodId)
+    .then((product) => {
+      product.title = updatedTitle;
+      product.price = updatedPrice;
+      product.description = updatedDescription;
+      product.imageUrl = updatedImageUrl;
+      return product.save();
+    })
+    .then((result) => {
+      console.log("UPDATE PRODUCT");
+      res.redirect("/admin/products");
+    })
+    .catch((err) => console.log(err));
+};
 
 exports.AddProducts = (req, res) => {
- Product.fetchAll()
+  Product.fetchAll()
     .then((products) => {
       res.render("admin/products", {
         prods: products,
