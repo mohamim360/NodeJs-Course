@@ -11,7 +11,7 @@ const adminController = require('../controllers/admin')
 router.get("/add-product",adminController.getAddProducts);
 
 
-// router.get('/products',adminController.AddProducts)
+router.get('/products',adminController.AddProducts)
 
 router.post("/add-product",adminController.postAddProducts);
 
