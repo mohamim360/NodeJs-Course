@@ -6,7 +6,7 @@ class Product {
     this.imageUrl = imageUrl;
     this.description = description;
     this.price = price;
-    this._id = new mongodb.ObjectId(id);
+    this._id = id ? new mongodb.ObjectId(id) : null;
   }
 
   //save
@@ -59,6 +59,21 @@ class Product {
         console.log(err);
       });
   }
+
+  static deleteById(prodID) {
+    const db = getDb();
+    return db
+      .collection("products")
+      .deleteOne({ _id: new mongodb.ObjectId(prodID) })
+      .then(result => {
+        console.log('deleted');
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+
 }
 
 module.exports = Product;
