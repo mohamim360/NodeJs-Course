@@ -3,6 +3,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 
 const mongoConnect = require("./utilities/database").mongoConnect;
+const User = require('./models/user')
 
 const adminRoutes = require("./routes/admin");
 
@@ -20,12 +21,12 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use((req, res, next) => {
-  // User.findByPk(1)
-  //   .then((user) => {
-  //     req.user = user;
-  //     next();
-  //   })
-  //   .catch((err) => console.log(err));
+  User.findByPk('64e6b3b97be7daf4ae3722cc')
+    .then((user) => {
+      req.user = user;
+    
+    })
+    .catch((err) => console.log(err));
   next();
 });
 
