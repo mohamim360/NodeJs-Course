@@ -2,37 +2,42 @@ const express = require("express");
 
 const bodyParser = require("body-parser");
 
-const mongoConnect = require("./utilities/database").mongoConnect;
-const User = require('./models/user')
-
-const adminRoutes = require("./routes/admin");
-
 const path = require("path");
 
+//utilities
+const mongoConnect = require("./utilities/database").mongoConnect;
+
+//models
+const User = require('./models/user')
+
+//routes
+const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
+
+//controllers
 const errorController = require("./controllers/error");
 
 const app = express();
 
-app.set("view engine", "ejs");
-app.set("views", "views");
-
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
+app.set("view engine", "ejs");
+app.set("views", "views");
+
 app.use((req, res, next) => {
-  User.findByPk('64e6b3b97be7daf4ae3722cc')
+
+  User.findById('64e6b3b97be7daf4ae3722cc')
     .then((user) => {
       req.user = user;
-    
+      next();
     })
     .catch((err) => console.log(err));
-  next();
+
 });
 
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);
-
 app.use(errorController.get404);
 
 mongoConnect(() => {
