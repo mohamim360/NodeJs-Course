@@ -19,7 +19,7 @@ class User {
 
   addToCart(product) {
     const cartProductIndex = this.cart.items.findIndex((cp) => {
-      return cp.productId.toString() === product._id.toString() ;
+      return cp.productId.toString() === product._id.toString();
     });
     const updateCartItems = [...this.cart.items];
     let newQuantity = 1;
@@ -44,27 +44,42 @@ class User {
       );
   }
 
-  getCart(){
-   // return this.cart;
-   const db = getDb();
+  getCart() {
+    // return this.cart;
+    const db = getDb();
 
-   const productIds = this.cart.items.map(i => {
-    return i.productId;
-   })
+    const productIds = this.cart.items.map((i) => {
+      return i.productId;
+    });
 
-   return db.collection("products")
-   .find({_id : {$in: productIds}})
-   .toArray()
-   .then(products => {
-    return products.map(p => {
-      return {
-        ...p,
-        quantity: this.cart.items.find(i => {
-          return i.productId.toString() === p._id.toString()
-        }).quantity
-      }
-    })
-   })
+    return db
+      .collection("products")
+      .find({ _id: { $in: productIds } })
+      .toArray()
+      .then((products) => {
+        return products.map((p) => {
+          return {
+            ...p,
+            quantity: this.cart.items.find((i) => {
+              return i.productId.toString() === p._id.toString();
+            }).quantity,
+          };
+        });
+      });
+  }
+
+  deleteItemFromCart(productId) {
+    const updateCartItems = this.cart.items.filter((item) => {
+      return item.productId.toString() !== productId.toString();
+    });
+
+    const db = getDb();
+    return db
+      .collection("users")
+      .updateOne(
+        { _id: new ObjectId(this._id) },
+        { $set: { cart: {items: updateCartItems} } }
+      );
   }
 
   static findById(userId) {
