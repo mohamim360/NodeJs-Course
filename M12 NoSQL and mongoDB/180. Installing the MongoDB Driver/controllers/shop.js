@@ -41,9 +41,6 @@ exports.getIndex = (req, res, next) => {
 exports.getCart = (req, res, next) => {
   req.user
     .getCart()
-    .then((cart) => {
-      cart
-        .getProducts()
         .then((products) => {
           res.render("shop/cart", {
             pageTitle: "Your Cart",
@@ -52,8 +49,7 @@ exports.getCart = (req, res, next) => {
           });
         })
         .catch((err) => console.log(err));
-    })
-    .catch((err) => console.log(err));
+    
 };
 
 exports.postCart = (req, res, next) => {
