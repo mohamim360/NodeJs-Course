@@ -13,7 +13,6 @@ class User {
 
   save() {
     const db = getDb();
-
     return db.collection("users").insertOne(this);
   }
 
@@ -80,6 +79,22 @@ class User {
         { _id: new ObjectId(this._id) },
         { $set: { cart: {items: updateCartItems} } }
       );
+  }
+
+  addOrder() {
+    const db = getDb();
+    return db
+      .collection("order")
+      .insertOne(this.cart)
+      .then(result => {
+        this.cart = { items: [] };
+        return db
+          .collection("users")
+          .updateOne(
+            { _id: new ObjectId(this._id) },
+            { $set: { cart: {items: []} } }
+          );
+      })
   }
 
   static findById(userId) {
