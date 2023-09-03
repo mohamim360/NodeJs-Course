@@ -1,17 +1,9 @@
 const mongoose = require('mongoose');
 
-//import Schema from mongoose object
-
-const Schema = mongoose.Schema; // This will be Schema Constructor
-
-//constructor allows me to create new schema and i will create new Schema(product schema)
-
-//i create a new schema by instantiating a schema object by calling new schema using that constructor
-
-//I pass a javascript object and in that object you now define how your product should look like
+const Schema = mongoose.Schema; 
 
 const productSchema = new Schema({ 
-   //define data schema
+
    title: {
     type: String,
     required: true
@@ -26,6 +18,11 @@ const productSchema = new Schema({
    },
    imageUrl: {
     type: String,
+    required: true
+   },
+   userId: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
     required: true
    }
 })
