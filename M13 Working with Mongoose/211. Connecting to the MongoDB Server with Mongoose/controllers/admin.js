@@ -1,3 +1,4 @@
+const product = require("../models/product");
 const Product = require("../models/product");
 
 exports.getAddProducts = (req, res, next) => {
@@ -14,9 +15,9 @@ exports.postAddProducts = (req, res) => {
   const price = req.body.price;
   const description = req.body.description;
   const product = new Product({
-//left-side->keys you defined in your schema
-//right-side->data you receive
-    title: title, 
+    //left-side->keys you defined in your schema
+    //right-side->data you receive
+    title: title,
     price: price,
     description: description,
     imageUrl: imageUrl,
@@ -62,15 +63,16 @@ exports.postEditProducts = (req, res, next) => {
   const updatedDescription = req.body.description;
   const updatedPrice = req.body.price;
 
-  const product = new Product(
-    updatedTitle,
-    updatedPrice,
-    updatedDescription,
-    updatedImageUrl,
-    prodId
-  );
-  product
-    .save()
+  Product.findById(prodId)
+    .then((product) => {
+      product.title = updatedTitle;
+      product.price = updatedPrice;
+      product.description = updatedDescription;
+      product.imageUrl = updatedImageUrl;
+
+      return product // fetched product will not be a js object with data but a full Mongoose object
+        .save(); //so, we can call mongoose method here
+    })
     .then((result) => {
       console.log("UPDATE PRODUCT");
       res.redirect("/admin/products");
@@ -78,8 +80,8 @@ exports.postEditProducts = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
-exports.AddProducts = (req, res) => {
-  Product.fetchAll()
+exports.getProducts = (req, res) => {
+  Product.find()
     .then((products) => {
       res.render("admin/products", {
         prods: products,
