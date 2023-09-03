@@ -1,3 +1,38 @@
+const mongoose = require('mongoose');
+
+//import Schema from mongoose object
+
+const Schema = mongoose.Schema; // This will be Schema Constructor
+
+//constructor allows me to create new schema and i will create new Schema(product schema)
+
+//i create a new schema by instantiating a schema object by calling new schema using that constructor
+
+//I pass a javascript object and in that object you now define how your product should look like
+
+const productSchema = new Schema({ 
+   //define data schema
+   title: {
+    type: String,
+    required: true
+   },
+   price: {
+    type: Number,
+    required: true
+   },
+   description: {
+    type: String,
+    required: true
+   },
+   imageUrl: {
+    type: String,
+    required: true
+   }
+})
+
+
+
+
 // const getDb = require("../utilities/database").getDb;
 // const mongodb = require("mongodb");
 // class Product {
