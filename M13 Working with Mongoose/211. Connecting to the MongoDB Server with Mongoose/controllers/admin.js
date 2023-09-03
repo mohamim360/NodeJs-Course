@@ -19,13 +19,11 @@ exports.postAddProducts = (req, res) => {
     price: price,
     description: description,
     imageUrl: imageUrl,
-    userId: req.user
-  }); 
+    userId: req.user, //newly added
+  });
   product
     .save()
     .then((result) => {
-      //console.log(result);
-      console.log("data");
       res.redirect("/admin/products");
     })
     .catch((err) => console.log(err));
@@ -69,8 +67,7 @@ exports.postEditProducts = (req, res, next) => {
       product.description = updatedDescription;
       product.imageUrl = updatedImageUrl;
 
-      return product // fetched product will not be a js object with data but a full Mongoose object
-        .save(); //so, we can call mongoose method here
+      return product.save();
     })
     .then((result) => {
       console.log("UPDATE PRODUCT");
@@ -81,7 +78,10 @@ exports.postEditProducts = (req, res, next) => {
 
 exports.getProducts = (req, res) => {
   Product.find()
+  .select('title price -_id')
+    .populate("userId",'name')
     .then((products) => {
+      console.log(products);
       res.render("admin/products", {
         prods: products,
         pageTitle: "Admin Products",
