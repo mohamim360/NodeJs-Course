@@ -8,12 +8,12 @@ const adminController = require('../controllers/admin')
 
 
 
-// router.get("/add-product",adminController.getAddProducts);
+ router.get("/add-product",adminController.getAddProducts);
 
 
 // router.get('/products',adminController.AddProducts)
 
-// router.post("/add-product",adminController.postAddProducts);
+ router.post("/add-product",adminController.postAddProducts);
 
 // router.get("/edit-product/:productId",adminController.getEditProducts);
 

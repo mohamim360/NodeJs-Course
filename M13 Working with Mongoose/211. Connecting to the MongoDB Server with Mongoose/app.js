@@ -26,14 +26,14 @@ app.use(express.static(path.join(__dirname, "public")));
 app.set("view engine", "ejs");
 app.set("views", "views");
 
-app.use((req, res, next) => {
-  // User.findById("64e6b3b97be7daf4ae3722cc")
-  //   .then((user) => {
-  //     req.user = new User(user.name, user.email, user.cart, user._id);
-  //     next();
-  //   })
-  //   .catch((err) => console.log(err));
-});
+// app.use((req, res, next) => {
+//   User.findById("64e6b3b97be7daf4ae3722cc")
+//     .then((user) => {
+//       req.user = new User(user.name, user.email, user.cart, user._id);
+//       next();
+//     })
+//     .catch((err) => console.log(err));
+// });
 
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);

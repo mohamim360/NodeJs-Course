@@ -13,7 +13,14 @@ exports.postAddProducts = (req, res) => {
   const imageUrl = req.body.imageUrl;
   const price = req.body.price;
   const description = req.body.description;
-  const product = new Product(title, price, description, imageUrl, null , req.user._id);
+  const product = new Product({
+//left-side->keys you defined in your schema
+//right-side->data you receive
+    title: title, 
+    price: price,
+    description: description,
+    imageUrl: imageUrl,
+  }); //order does not matter because it is JavaScript Object
   product
     .save()
     .then((result) => {
