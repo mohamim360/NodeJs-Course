@@ -25,8 +25,6 @@ const userSchema = new Schema({
   },
 });
 
-
-
 userSchema.methods.addToCart = function (product) {
   const cartProductIndex = this.cart.items.findIndex((cp) => {
     return cp.productId.toString() === product._id.toString();
@@ -46,7 +44,15 @@ userSchema.methods.addToCart = function (product) {
     items: updateCartItems,
   };
   this.cart = updateCart;
-  return this.save(); //object save itself using save() method to update the cart
+  return this.save();
+};
+
+userSchema.methods.removeFromCart = function (productId) {
+  const updateCartItems = this.cart.items.filter((item) => {
+    return item.productId.toString() !== productId.toString();
+  });
+  this.cart.items = updateCartItems;
+  return this.save();
 };
 
 module.exports = mongoose.model("User", userSchema);
