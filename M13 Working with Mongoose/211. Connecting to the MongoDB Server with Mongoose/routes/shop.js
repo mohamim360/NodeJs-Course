@@ -20,7 +20,7 @@ router.get("/cart", shopController.getCart);
 
 //order
  router.post("/create-order", shopController.postOrder);
-// router.get("/orders", shopController.getOrders);
+router.get("/orders", shopController.getOrders);
 
 // // //checkout
 
