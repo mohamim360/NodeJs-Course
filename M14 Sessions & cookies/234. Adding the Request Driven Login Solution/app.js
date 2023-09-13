@@ -16,7 +16,6 @@ const User = require("./models/user");
 const MONGODB_URI =
   "mongodb+srv://mohamim360:M51lUp9tDsG545SF@cluster0.k4fqzxy.mongodb.net/shop?retryWrites=true&w=majority";
 
-
 const app = express();
 
 const store = new MongoDBStore({
@@ -43,6 +42,17 @@ app.use(
   })
 );
 
+app.use((req, res, next) => {
+  if (!req.session.user) {
+    return next();
+  }
+  User.findById(req.session.user._id)
+    .then((user) => {
+      req.user = user;
+      next();
+    })
+    .catch((err) => console.log(err));
+});
 
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);
